@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Rate My Dorm
+
+Rate My Dorm is a web application designed to simplify and enhance the dormitory selection process for students. This user-friendly platform allows students to upload and share photos of their dorm rooms, providing a real and unfiltered glimpse into various on-campus housing options. Other users can then browse these images and rate them, fostering a community-driven resource that helps new and prospective students find dorms that best suit their preferences and needs.
+
+### Authors
+
+Rich Park, Myles Shin, Nikhil Polepalli, Hyun Lee
+
+### Tech Stack
+
+Next/React, Firebase, Node, Chakra
 
 ## Getting Started
 
@@ -13,19 +23,6 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
