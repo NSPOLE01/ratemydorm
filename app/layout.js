@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
+
 const colors = {
   brand: {
     100: "#000000", // main black
@@ -13,7 +14,7 @@ const colors = {
   },
 };
 
-const theme = extendTheme({
+export const theme = extendTheme({
   colors,
 });
 

@@ -1,6 +1,9 @@
 import DormList from "@/components/DormList";
 import Hero from "@/components/Hero";
 import SearchBar from "@/components/Searchbar";
+import { ChakraProvider } from "@chakra-ui/react";
+import { theme } from './layout'; // Make sure this import path is correct
+
 
 export default function HomePage() {
   const dorms = [
@@ -55,10 +58,12 @@ export default function HomePage() {
     },
   ];
   return (
+    <ChakraProvider theme={theme}>
     <main>
       <Hero />
       <SearchBar />
       <DormList dorms={dorms} />
     </main>
+    </ChakraProvider>
   );
 }
