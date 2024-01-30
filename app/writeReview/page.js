@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation';
 import { FaStar } from 'react-icons/fa';
 import {
   Stack,
@@ -19,7 +19,10 @@ import {
   Center
 } from '@chakra-ui/react';
 import { ChevronLeftIcon } from '@chakra-ui/icons'; // For the back arrow icon
+import { db } from '../../firebaseConfig';
+import { collection, addDoc } from "firebase/firestore"; 
 
+// update the stars based on the rating
 const StarRating = ({ rating, setRating }) => {
   return (
     <Box>
@@ -32,15 +35,28 @@ const StarRating = ({ rating, setRating }) => {
           onClick={() => setRating(index + 1)}
           _hover={{ color: "yellow.600" }}
           margin="0.6rem"
-          boxSize="2rem" // Adjust the size as needed
+          boxSize="2rem"
         />
       ))}
     </Box>
   );
 };
 
+// Validation function for the room number. 
+// The reason why there can be a letter at the end is becausesuites have room numbers like "123A"
+// requires at least one number, and at most one letter (and letter has to be at the end)
+function isValidRoomNumber(roomNumber) {
+  const regex = /^\d{1,}[a-zA-Z]?$/;
+  if (regex.test(roomNumber)) {
+    const letterCount = (roomNumber.match(/[a-zA-Z]/g) || []).length;
+    return letterCount <= 1; // Ensure there's at most one letter
+  }
+  return false;
+}
+
+// to handle the form submission
 const WriteReview = () => {
-  const router = useRouter(); // Use useRouter hook
+  const router = useRouter();
   const [dormName, setDormName] = useState('');
   const [review, setReview] = useState('');
   const [roomRating, setRoomRating] = useState(0);
@@ -50,7 +66,7 @@ const WriteReview = () => {
   const [amenitiesRating, setAmenitiesRating] = useState(0);
   const [roomNumber, setRoomNumber] = useState('');
   const [roomType, setRoomType] = useState('');
-  const [photos, setPhotos] = useState([]); // State to store uploaded photos
+  const [photos, setPhotos] = useState([]);
 
   useState(() => {
     const queryDormName = new URLSearchParams(window.location.search).get('dormName');
@@ -63,22 +79,38 @@ const WriteReview = () => {
   };
 
   const handleBackClick = () => {
-    // Use router.push for navigation instead of window.location.href
     router.push(`/reviewPage?dormName=${encodeURIComponent(dormName)}`);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Review Submission", {
+
+    // Validate the room number before proceeding
+    if (!isValidRoomNumber(roomNumber)) {
+      alert('Invalid room number. Please enter a valid room number.');
+      return; // Stop the form submission if validation fails
+    }
+
+    // Construct the review data object
+    const reviewData = {
       dormName,
       roomNumber,
       roomType,
       review,
       ratings: { roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating },
-      photos, // Include uploaded photos in the submission data
-    });
-    // After submitting the review, navigate back programmatically
-    router.push(`/reviewPage?dormName=${encodeURIComponent(dormName)}`);
+      photos: photos.map(photo => photo.name), // Store photo names or URLs
+      createdAt: new Date(),
+    };
+
+    try {
+      // Add a new document in collection "reviews"
+      await addDoc(collection(db, "reviews"), reviewData);
+      console.log("Document written with ID: ", docRef.id);
+      // Navigate back or show a success message
+      router.push(`/reviewPage?dormName=${encodeURIComponent(dormName)}`);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
@@ -95,8 +127,8 @@ const WriteReview = () => {
                 icon={<ChevronLeftIcon />}
                 aria-label="Back to review page"
                 variant="outline"
-                position="absolute" // Optionally position it absolutely
-                top={20} // Adjust these values based on your layout
+                position="absolute"
+                top={20}
                 left={2}
                 onClick={handleBackClick}
                 />
