@@ -1,32 +1,47 @@
 "use client";
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { FaStar } from 'react-icons/fa';
-import { Stack, Box, Button, FormControl, FormLabel, Flex, Heading, Input, Textarea, Text, Icon, Select, IconButton, Center } from '@chakra-ui/react';
+import {
+  Stack,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Flex,
+  Heading,
+  Input,
+  Textarea,
+  Text,
+  Icon,
+  Select,
+  IconButton,
+  Center
+} from '@chakra-ui/react';
 import { ChevronLeftIcon } from '@chakra-ui/icons'; // For the back arrow icon
 
-
 const StarRating = ({ rating, setRating }) => {
-    return (
-      <Box>
-        {[...Array(5)].map((_, index) => (
-          <Icon
-            key={index}
-            as={FaStar}
-            cursor="pointer"
-            color={index < rating ? "yellow.400" : "gray.300"}
-            onClick={() => setRating(index + 1)}
-            _hover={{ color: "yellow.600" }}
-            margin="0.6rem"
-            boxSize="2rem" // Adjust the size as needed
-          />
-        ))}
-      </Box>
-    );
-  };
+  return (
+    <Box>
+      {[...Array(5)].map((_, index) => (
+        <Icon
+          key={index}
+          as={FaStar}
+          cursor="pointer"
+          color={index < rating ? "yellow.400" : "gray.300"}
+          onClick={() => setRating(index + 1)}
+          _hover={{ color: "yellow.600" }}
+          margin="0.6rem"
+          boxSize="2rem" // Adjust the size as needed
+        />
+      ))}
+    </Box>
+  );
+};
 
-  
 const WriteReview = () => {
-  const dormName = new URLSearchParams(window.location.search).get('dormName');
+  const router = useRouter(); // Use useRouter hook
+  const [dormName, setDormName] = useState('');
   const [review, setReview] = useState('');
   const [roomRating, setRoomRating] = useState(0);
   const [buildingRating, setBuildingRating] = useState(0);
@@ -37,15 +52,20 @@ const WriteReview = () => {
   const [roomType, setRoomType] = useState('');
   const [photos, setPhotos] = useState([]); // State to store uploaded photos
 
+  useState(() => {
+    const queryDormName = new URLSearchParams(window.location.search).get('dormName');
+    if (queryDormName) setDormName(queryDormName);
+  }, []);
+
   const handlePhotoUpload = (e) => {
     const selectedPhotos = e.target.files;
     setPhotos([...photos, ...selectedPhotos]);
   };
 
   const handleBackClick = () => {
-    const reviewPageUrl = `http://localhost:3000/reviewPage?dormName=${encodeURIComponent(dormName)}`;
-    window.location.href = reviewPageUrl;
-};
+    // Use router.push for navigation instead of window.location.href
+    router.push(`/reviewPage?dormName=${encodeURIComponent(dormName)}`);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,8 +77,8 @@ const WriteReview = () => {
       ratings: { roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating },
       photos, // Include uploaded photos in the submission data
     });
-    const reviewPageUrl = `http://localhost:3000/reviewPage?dormName=${encodeURIComponent(dormName)}`;
-    window.location.href = reviewPageUrl;
+    // After submitting the review, navigate back programmatically
+    router.push(`/reviewPage?dormName=${encodeURIComponent(dormName)}`);
   };
 
   return (

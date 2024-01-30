@@ -1,10 +1,22 @@
 // app/reviewPage/page.js
 "use client";
 import { Box, Flex, Heading, Button, Text } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ReviewPage = () => {
-  const dormName = new URLSearchParams(window.location.search).get('dormName');
+  const [dormName, setDormName] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fetch the dormName from the URL parameters
+    const dormNameFromQuery = new URLSearchParams(window.location.search).get('dormName');
+    if (dormNameFromQuery) setDormName(dormNameFromQuery);
+  }, []);
+
+  const handleWriteReview = () => {
+    router.push(`/writeReview?dormName=${encodeURIComponent(dormName)}`);
+  };
 
   return (
     <Box>
@@ -27,23 +39,20 @@ const ReviewPage = () => {
             {' '}Reviews
           </Text>
         </Heading>
-        <NextLink href={`/writeReview?dormName=${encodeURIComponent(dormName || '')}`} passHref>
-          <Button
-            mt={10}
-            as="a"
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"brand.200"}
-            _hover={{
-              bg: "brand.500",
-            }}
-          >
-            Write Review
-          </Button>
-        </NextLink>
+        <Button
+          onClick={handleWriteReview}
+          mt={10}
+          fontSize={"sm"}
+          fontWeight={600}
+          color={"white"}
+          bg={"brand.200"}
+          _hover={{
+            bg: "brand.500",
+          }}
+        >
+          Write Review
+        </Button>
       </Flex>
-      {/* ... rest of your page content ... */}
     </Box>
   );
 };
