@@ -75,10 +75,31 @@
 import React from "react";
 import { Button, Center, Image, VStack, Text } from "@chakra-ui/react";
 import { Google } from "react-bootstrap-icons";
+import {
+  auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  db,
+} from "../../firebaseConfig";
+import { setDoc, doc } from "firebase/firestore";
 
 const SignInPage = () => {
-  const handleSignIn = () => {
-    console.log("Sign in with Google");
+  const handleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+      await setDoc(doc(db, "users", `${user.email}`), {
+        name: user.displayName,
+        photo: user.photoURL,
+        email: user.email,
+      });
+      console.log(user);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
