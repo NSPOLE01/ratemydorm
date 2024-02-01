@@ -8,6 +8,8 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 
+import NextLink from "next/link";
+
 export default function Navbar() {
   return (
     <Box>
@@ -23,13 +25,17 @@ export default function Navbar() {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
-          >
-            Rate My VandyDorm
-          </Text>
+          <NextLink href="/" passHref>
+            <Text
+              as="a" // Make the Text component behave like an anchor tag
+              textAlign={useBreakpointValue({ base: "center", md: "left" })}
+              fontFamily={"heading"}
+              color={useColorModeValue("gray.800", "white")}
+              cursor="pointer" // To show the link pointer cursor on hover
+            >
+              Rate My VandyDorm
+            </Text>
+          </NextLink>
         </Flex>
 
         <Stack
