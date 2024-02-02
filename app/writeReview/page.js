@@ -46,6 +46,9 @@ const StarRating = ({ rating, setRating }) => {
 // The reason why there can be a letter at the end is becausesuites have room numbers like "123A"
 // requires at least one number, and at most one letter (and letter has to be at the end)
 function isValidRoomNumber(roomNumber) {
+  if (!roomNumber) {
+    return true;
+  }
   const regex = /^\d{1,}[a-zA-Z]?$/;
   if (regex.test(roomNumber)) {
     const letterCount = (roomNumber.match(/[a-zA-Z]/g) || []).length;
