@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 const DormCard = ({ dorm }) => {
   const router = useRouter();
 
+  const formatDormIdForUrl = (dormName) => {
+    return dormName.replace(/\s+/g, "-").toLowerCase(); // Replace spaces with hyphens and make lowercase
+  };
+
   const navigateToReviewPage = () => {
-    router.push(`/reviewPage?dormName=${encodeURIComponent(dorm.name)}`);
+    const dormId = formatDormIdForUrl(dorm.name);
+
+    router.push(`/reviewPage?dormName=${dormId}`);
   };
 
   return (
