@@ -82,8 +82,10 @@ import {
   db,
 } from "../../firebaseConfig";
 import { setDoc, doc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const SignInPage = () => {
+  const router = useRouter();
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -91,12 +93,14 @@ const SignInPage = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       const user = result.user;
+      localStorage.setItem("userEmail", user.email);
       await setDoc(doc(db, "users", `${user.email}`), {
         name: user.displayName,
         photo: user.photoURL,
         email: user.email,
       });
       console.log(user);
+      window.location.href = `/`;
     } catch (error) {
       console.error(error);
     }
