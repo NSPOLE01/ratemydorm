@@ -86,6 +86,7 @@ import { useRouter } from "next/navigation";
 
 const SignInPage = () => {
   const router = useRouter();
+
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -94,13 +95,14 @@ const SignInPage = () => {
       const token = credential.accessToken;
       const user = result.user;
       localStorage.setItem("userEmail", user.email);
-      await setDoc(doc(db, "users", `${user.email}`), {
+
+      await setDoc(doc(db, "users", user.uid), {
         name: user.displayName,
         photo: user.photoURL,
         email: user.email,
       });
-      console.log(user);
-      window.location.href = `/`;
+
+      router.push("/");
     } catch (error) {
       console.error(error);
     }

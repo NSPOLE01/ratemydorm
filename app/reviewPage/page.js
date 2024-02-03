@@ -3,11 +3,13 @@
 import { Box, Flex, Heading, Button, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const ReviewPage = () => {
   const router = useRouter();
   const [dormName, setDormName] = useState("");
   const [dormId, setDormId] = useState("");
+  const [user, setUser] = useState(null); // State to keep track of the user's auth status
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -21,6 +23,17 @@ const ReviewPage = () => {
   };
 
   useEffect(() => {
+    // Set up a listener for authentication state changes
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // currentUser is null if no user is logged in
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     // Fetch the dormName from the URL parameters
     const dormId = new URLSearchParams(window.location.search).get("dormName");
     if (dormId) {
@@ -31,7 +44,12 @@ const ReviewPage = () => {
   }, []);
 
   const handleWriteReview = () => {
-    router.push(`/writeReview?dormName=${dormId}`);
+    if (user) {
+      // Check if a user is logged in
+      router.push(`/writeReview?dormName=${dormName}`);
+    } else {
+      alert("You must be logged in to write a review.");
+    }
   };
 
   return (

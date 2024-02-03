@@ -21,6 +21,7 @@ import {
 import { ChevronLeftIcon } from "@chakra-ui/icons"; // For the back arrow icon
 import { db } from "../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 // update the stars based on the rating
 const StarRating = ({ rating, setRating }) => {
@@ -72,6 +73,9 @@ const WriteReview = () => {
   const [roomNumber, setRoomNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [photos, setPhotos] = useState([]);
+
+  const auth = getAuth();
+  const userUid = auth.currentUser?.uid;
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -128,6 +132,7 @@ const WriteReview = () => {
       },
       photos: photos.map((photo) => photo.name), // Store photo names or URLs
       createdAt: new Date(),
+      userId: userUid,
     };
 
     try {

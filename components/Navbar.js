@@ -16,11 +16,15 @@ import { signOut, getAuth } from "firebase/auth";
 export default function Navbar() {
   const [userEmail, setUserEmail] = useState("");
   const [userPhoto, setUserPhoto] = useState("");
+
+  const auth = getAuth();
+  const userUid = auth.currentUser?.uid;
+
   useEffect(() => {
     const fetchUserPhoto = async (email) => {
       console.log("test");
       if (email) {
-        const userRef = doc(db, "users", email);
+        const userRef = doc(db, "users", userUid);
         const docSnap = await getDoc(userRef);
 
         if (docSnap.exists()) {
@@ -35,10 +39,9 @@ export default function Navbar() {
       setUserEmail(localStorage.getItem("userEmail"));
       fetchUserPhoto(localStorage.getItem("userEmail"));
     }
-  }, [userEmail]);
+  }, [userUid]);
 
   const signOutUser = () => {
-    const auth = getAuth();
     signOut(auth)
       .then(() => {
         localStorage.removeItem("userEmail");
@@ -101,26 +104,17 @@ export default function Navbar() {
             >
               <Button
                 as={"a"}
-                fontSize={"sm"}
-                fontWeight={400}
-                variant={"link"}
-                href={"signin"}
-              >
-                Sign In
-              </Button>
-              <Button
-                as={"a"}
                 display={{ base: "none", md: "inline-flex" }}
                 fontSize={"sm"}
                 fontWeight={600}
                 color={"white"}
                 bg={"brand.200"}
-                href={"#"}
+                href={"signin"}
                 _hover={{
                   bg: "brand.500",
                 }}
               >
-                Sign Up
+                Sign In
               </Button>
             </Stack>
           )}
