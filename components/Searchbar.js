@@ -28,10 +28,10 @@ function SearchBar({
         <Select
           ml={2}
           // onChange={(e) => onTagChange(e.target.value)}
-          data-testid="Category"
+          data-testid="Location"
           // value={selectedTag}
         >
-          <option value="">Category</option>
+          <option value="">Location</option>
           <option value="Freshmen">Freshman</option>
           <option value="Main">Main</option>
           <option value="Highland Quad">Highland Quad</option>

@@ -2,11 +2,11 @@
   "name": "ratemydorm",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -15,9 +15,8 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "bootstrap-icons": "^1.11.3",
-    "eslint": "8.56.0",
-    "eslint-config-next": "14.1.0",
     "firebase": "^10.7.2",
+    "firebase-tools": "^13.1.0",
     "framer-motion": "^11.0.3",
     "next": "14.1.0",
     "react": "18.2.0",

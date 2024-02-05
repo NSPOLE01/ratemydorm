@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaStar } from "react-icons/fa";
 import {
@@ -22,6 +22,8 @@ import { ChevronLeftIcon } from "@chakra-ui/icons"; // For the back arrow icon
 import { db } from "../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { addReviewAndUpdateStats } from "@/firebaseFunctions/firebaseWrite";
+import { getDormNameFromDormID } from "@/utils";
 
 // update the stars based on the rating
 const StarRating = ({ rating, setRating }) => {
@@ -77,24 +79,11 @@ const WriteReview = () => {
   const auth = getAuth();
   const userUid = auth.currentUser?.uid;
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  const retrieveOriginalDormName = (dormId) => {
-    return dormId
-      .split("-")
-      .map((word) => capitalizeFirstLetter(word))
-      .join(" ");
-  };
-
-  useState(() => {
-    const queryDormId = new URLSearchParams(window.location.search).get(
-      "dormName"
-    );
-    if (queryDormId) {
-      setDormId(queryDormId);
-      const dormName = retrieveOriginalDormName(queryDormId);
+  useEffect(() => {
+    const dormId = new URLSearchParams(window.location.search).get("dormId");
+    if (dormId) {
+      setDormId(dormId);
+      const dormName = getDormNameFromDormID(dormId);
       setDormName(dormName);
     }
   }, []);
@@ -105,7 +94,7 @@ const WriteReview = () => {
   };
 
   const handleBackClick = () => {
-    router.push(`/reviewPage?dormName=${encodeURIComponent(dormName)}`);
+    router.push(`/reviewPage?dormId=${encodeURIComponent(dormId)}`);
   };
 
   const handleSubmit = async (e) => {
@@ -116,6 +105,17 @@ const WriteReview = () => {
       alert("Invalid room number. Please enter a valid room number.");
       return; // Stop the form submission if validation fails
     }
+
+    // Calculate the new overall rating from individual ratings
+    const ratings = [
+      roomRating,
+      buildingRating,
+      bathroomRating,
+      cleanlinessRating,
+      amenitiesRating,
+    ];
+    const newOverallRating =
+      ratings.reduce((acc, curr) => acc + curr, 0) / ratings.length;
 
     // Construct the review data object
     const reviewData = {
@@ -137,10 +137,13 @@ const WriteReview = () => {
 
     try {
       // Add the review document to the "reviews" collection, using the formatted dorm name as a reference
-      await addDoc(collection(db, "dorms", dormName, "reviews"), reviewData);
+      await addDoc(collection(db, "dorms", dormId, "reviews"), reviewData);
+
+      // Update average rating and review count
+      await addReviewAndUpdateStats(dormId, newOverallRating);
 
       // Redirect or notify the user of success
-      router.push(`/reviewPage?dormName=${dormId}`);
+      router.push(`/reviewPage?dormId=${dormId}`);
     } catch (e) {
       console.error("Error adding document: ", e);
     }

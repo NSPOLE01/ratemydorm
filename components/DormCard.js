@@ -2,18 +2,15 @@
 import { Box, Image, Text, HStack, VStack } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { getDormIdFromDormName } from "@/utils";
 
 const DormCard = ({ dorm }) => {
   const router = useRouter();
 
-  const formatDormIdForUrl = (dormName) => {
-    return dormName.replace(/\s+/g, "-").toLowerCase(); // Replace spaces with hyphens and make lowercase
-  };
-
   const navigateToReviewPage = () => {
-    const dormId = formatDormIdForUrl(dorm.name);
+    const dormId = getDormIdFromDormName(dorm.name);
 
-    router.push(`/reviewPage?dormName=${dormId}`);
+    router.push(`/reviewPage?dormId=${dormId}`);
   };
 
   return (
@@ -47,7 +44,7 @@ const DormCard = ({ dorm }) => {
               <Box
                 as={FaStar}
                 key={i}
-                color={i < dorm.rating ? "yellow.400" : "gray.300"}
+                color={i < dorm.averageRating ? "yellow.400" : "gray.300"}
               />
             ))}
           <Text as="span" fontSize="sm" color="gray.600">
