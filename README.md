@@ -11,8 +11,19 @@ Rich Park, Myles Shin, Nikhil Polepalli, Hyun Lee
 Next/React, Firebase, Node, Chakra
 
 ## Getting Started
+First, clone over the repository to your local:
 
-First, run the development server:
+```bash
+git clone
+```
+
+Second, install all dependencies:
+
+```bash
+npm install
+```
+
+Finally, run the development server:
 
 ```bash
 npm run dev
