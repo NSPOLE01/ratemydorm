@@ -18,8 +18,8 @@ function SearchBar({
           <Input
             type="text"
             placeholder="Search for dorms"
-            // value={searchQuery}
-            // onChange={(e) => onSearch(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => onSearch(e.target.value)}
             w="600px"
             data-testid="search-input"
           />
@@ -27,14 +27,14 @@ function SearchBar({
 
         <Select
           ml={2}
-          // onChange={(e) => onTagChange(e.target.value)}
+          onChange={(e) => onTagChange(e.target.value)}
           data-testid="Location"
-          // value={selectedTag}
+          value={selectedTag}
         >
           <option value="">Location</option>
-          <option value="Freshmen">Freshman</option>
-          <option value="Main">Main</option>
-          <option value="Highland Quad">Highland Quad</option>
+          <option value="Commons">Commons</option>
+          <option value="main">Main</option>
+          <option value="highland">Highland Quad</option>
         </Select>
       </Center>
     </Flex>
