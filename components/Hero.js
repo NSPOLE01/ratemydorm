@@ -1,59 +1,6 @@
 import { Box, Heading, Container, Text, Button, Stack } from "@chakra-ui/react";
-import SearchBar from "@/components/Searchbar";
-import DormList from "@/components/DormList";
 
 const Hero = () => {
-  const dorms = [
-    {
-      id: 1,
-      name: "Zeppos",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 5,
-      reviewCount: 20,
-    },
-    {
-      id: 2,
-      name: "Roth",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 5,
-      reviewCount: 15,
-    },
-    {
-      id: 3,
-      name: "Kissam",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 4,
-      name: "Hank Ingram House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 5,
-      name: "Stambaugh House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 6,
-      name: "Sutherland House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 7,
-      name: "Gilette House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-  ];
   return (
     <>
       <Container maxW={"3xl"}>
@@ -82,8 +29,6 @@ const Hero = () => {
           </Text>
         </Stack>
       </Container>
-      <SearchBar />
-      <DormList dorms={dorms} />
     </>
   );
 };

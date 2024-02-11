@@ -1,91 +1,49 @@
-import { Box, Heading, Container, Text, Button, Stack } from "@chakra-ui/react";
-import SearchBar from "@/components/Searchbar";
-import DormList from "@/components/DormList";
+"use client";
 
-const homePage = () => {
-  const dorms = [
-    {
-      id: 1,
-      name: "Zeppos",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 5,
-      reviewCount: 20,
-    },
-    {
-      id: 2,
-      name: "Roth",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 5,
-      reviewCount: 15,
-    },
-    {
-      id: 3,
-      name: "Kissam",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 4,
-      name: "Hank Ingram House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 5,
-      name: "Stambaugh House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 6,
-      name: "Sutherland House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-    {
-      id: 7,
-      name: "Gilette House",
-      imageUrl: "https://via.placeholder.com/150",
-      rating: 4,
-      reviewCount: 50,
-    },
-  ];
+import DormList from "@/components/DormList";
+import Hero from "@/components/Hero";
+import SearchBar from "@/components/Searchbar";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "../layout";
+import { useState, useEffect } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
+
+export default function HomePage() {
+  const [dorms, setDorms] = useState([]);
+
+  useEffect(() => {
+    const fetchDorms = async () => {
+      try {
+        // Query the 'dorms' collection
+        const querySnapshot = await getDocs(collection(db, "dorms"));
+        const dormsData = querySnapshot.docs.map((doc) => {
+          // Assuming each dorm document has 'averageRating' and 'reviewCount' fields
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name, // Or however you're storing the dorm name
+            imageUrl: data.imageUrl, // Make sure you have an imageUrl field in your documents
+            averageRating: data.averageRating, // The field for the average rating
+            reviewCount: data.reviewCount, // The field for the review count
+            location: data.location,
+          };
+        });
+        console.log("Dorms fetched:", dormsData); // Log fetched dorms data
+        setDorms(dormsData);
+      } catch (error) {
+        console.error("Error fetching dorms data:", error);
+      }
+    };
+
+    fetchDorms();
+  }, []);
+
   return (
-    <>
-      <Container maxW={"3xl"}>
-        <Stack
-          as={Box}
-          textAlign={"center"}
-          spacing={{ base: 4, md: 10 }}
-          py={{ base: 10, md: 30 }}
-        >
-          <Heading
-            fontWeight={600}
-            fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
-            lineHeight={"110%"}
-            color={"brand.100"}
-          >
-            Rate My <br />
-            <Text as={"span"} color={"brand.200"}>
-              Vandy
-            </Text>
-            Dorm
-          </Heading>
-          <Text color={"gray.500"}>
-            Find and upload photos and reviews for dorms with other Vanderbilt
-            students. Post your pictures, upload reviews, and find your new
-            living space!
-          </Text>
-        </Stack>
-      </Container>
+    <main>
+      <Hero />
       <SearchBar />
       <DormList dorms={dorms} />
-    </>
+    </main>
   );
-};
-
-export default homePage;
+}
