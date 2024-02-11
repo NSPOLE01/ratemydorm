@@ -2,7 +2,7 @@ import { Box, Heading, Container, Text, Button, Stack } from "@chakra-ui/react";
 import SearchBar from "@/components/Searchbar";
 import DormList from "@/components/DormList";
 
-const Hero = () => {
+const homePage = () => {
   const dorms = [
     {
       id: 1,
@@ -88,4 +88,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default homePage;

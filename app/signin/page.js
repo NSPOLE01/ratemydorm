@@ -102,7 +102,7 @@ const SignInPage = () => {
         email: user.email,
       });
 
-      router.push("/");
+      router.push("/homePage");
     } catch (error) {
       console.error(error);
     }

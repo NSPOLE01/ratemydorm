@@ -11,47 +11,40 @@ import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { db } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { signOut, getAuth } from "firebase/auth";
+import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const [userEmail, setUserEmail] = useState("");
-  const [userPhoto, setUserPhoto] = useState("");
-
-  const auth = getAuth();
-  const userUid = auth.currentUser?.uid;
-
+  const router = useRouter();
+  const [user, setUser] = useState(null);
   useEffect(() => {
-    const fetchUserPhoto = async (email) => {
-      console.log("test");
-      if (email) {
-        const userRef = doc(db, "users", userUid);
-        const docSnap = await getDoc(userRef);
-
-        if (docSnap.exists()) {
-          setUserPhoto(docSnap.data().photo);
-        } else {
-          console.log("No photo");
-        }
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
       }
-    };
+    });
 
-    if (localStorage.getItem("userEmail")) {
-      setUserEmail(localStorage.getItem("userEmail"));
-      fetchUserPhoto(localStorage.getItem("userEmail"));
-    }
-  }, [userUid]);
+    return () => unsubscribe();
+  }, []);
 
   const signOutUser = () => {
-    signOut(auth)
+    getAuth()
+      .signOut()
       .then(() => {
-        localStorage.removeItem("userEmail");
-        setUserEmail(null);
-        setUserPhoto("");
+        setUser(null);
+        router.push("/");
       })
       .catch((error) => {
         console.error(error);
       });
   };
+
+  if (!user) {
+    return null; // or any other placeholder you want to use when user is not signed in
+  }
 
   return (
     <Box>
@@ -67,21 +60,21 @@ export default function Navbar() {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <NextLink href="/" passHref>
+          <NextLink href="/homePage" passHref>
             <Text
               as="a" // Make the Text component behave like an anchor tag
-              textAlign={useBreakpointValue({ base: "center", md: "left" })}
+              textAlign={{ base: "center", md: "left" }}
               fontFamily={"heading"}
-              color={useColorModeValue("gray.800", "white")}
+              color={"brand.100"}
               cursor="pointer" // To show the link pointer cursor on hover
             >
-              Rate My VandyDorm
+              RATEMYDORM
             </Text>
           </NextLink>
         </Flex>
 
         <div>
-          {userEmail ? (
+          {user && (
             <Stack
               flex={{ base: 1, md: 0 }}
               justify={"flex-end"}
@@ -89,33 +82,11 @@ export default function Navbar() {
               spacing={6}
             >
               <img
-                src={userPhoto}
+                src={user.photoURL}
                 alt="User"
                 style={{ width: 50, height: 50, borderRadius: "50%" }}
               />
               <button onClick={signOutUser}>Sign Out</button>
-            </Stack>
-          ) : (
-            <Stack
-              flex={{ base: 1, md: 0 }}
-              justify={"flex-end"}
-              direction={"row"}
-              spacing={6}
-            >
-              <Button
-                as={"a"}
-                display={{ base: "none", md: "inline-flex" }}
-                fontSize={"sm"}
-                fontWeight={600}
-                color={"white"}
-                bg={"brand.200"}
-                href={"signin"}
-                _hover={{
-                  bg: "brand.500",
-                }}
-              >
-                Sign In
-              </Button>
             </Stack>
           )}
         </div>
