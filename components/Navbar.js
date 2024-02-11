@@ -9,16 +9,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
-import { db } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
 import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { app } from "@/firebaseConfig";
 
 export default function Navbar() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   useEffect(() => {
-    const auth = getAuth();
+    const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
@@ -31,7 +30,7 @@ export default function Navbar() {
   }, []);
 
   const signOutUser = () => {
-    getAuth()
+    getAuth(app)
       .signOut()
       .then(() => {
         setUser(null);
