@@ -42,7 +42,7 @@ export default function Navbar() {
   };
 
   if (!user) {
-    return null; // or any other placeholder you want to use when user is not signed in
+    return null;
   }
 
   return (
@@ -65,7 +65,7 @@ export default function Navbar() {
               textAlign={{ base: "center", md: "left" }}
               fontFamily={"heading"}
               color={"brand.100"}
-              cursor="pointer" // To show the link pointer cursor on hover
+              cursor="pointer"
             >
               RATEMYDORM
             </Text>
@@ -80,11 +80,15 @@ export default function Navbar() {
               direction={"row"}
               spacing={6}
             >
-              <img
-                src={user.photoURL}
-                alt="User"
-                style={{ width: 50, height: 50, borderRadius: "50%" }}
-              />
+              <NextLink href="/accountPage" passHref>
+                <img
+                  as="a"
+                  src={user.photoURL}
+                  alt="User"
+                  style={{ width: 50, height: 50, borderRadius: "50%" }}
+                  cursor="pointer"
+                />
+              </NextLink>
               <button onClick={signOutUser}>Sign Out</button>
             </Stack>
           )}
