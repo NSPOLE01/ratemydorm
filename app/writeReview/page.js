@@ -24,6 +24,8 @@ import { collection, addDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { addReviewAndUpdateStats } from "@/firebaseFunctions/firebaseWrite";
 import { getDormNameFromDormID } from "@/utils";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 
 // update the stars based on the rating
 const StarRating = ({ rating, setRating }) => {
@@ -99,55 +101,45 @@ const WriteReview = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate the room number before proceeding
+  
     if (!isValidRoomNumber(roomNumber)) {
       alert("Invalid room number. Please enter a valid room number.");
-      return; // Stop the form submission if validation fails
+      return;
     }
-
-    // Calculate the new overall rating from individual ratings
-    const ratings = [
-      roomRating,
-      buildingRating,
-      bathroomRating,
-      cleanlinessRating,
-      amenitiesRating,
-    ];
-    const newOverallRating =
-      ratings.reduce((acc, curr) => acc + curr, 0) / ratings.length;
-
-    // Construct the review data object
-    const reviewData = {
-      dormName,
-      roomNumber,
-      roomType,
-      review,
-      ratings: {
-        roomRating,
-        buildingRating,
-        bathroomRating,
-        cleanlinessRating,
-        amenitiesRating,
-      },
-      photos: photos.map((photo) => photo.name), // Store photo names or URLs
-      createdAt: new Date(),
-      userId: userUid,
-    };
-
+  
+    const newOverallRating = [roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating].reduce((acc, curr) => acc + curr, 0) / 5;
+  
     try {
-      // Add the review document to the "reviews" collection, using the formatted dorm name as a reference
+      // Upload photos to Firebase Storage and get their URLs
+      const photoURLs = await Promise.all(
+        photos.map(async (photo) => {
+          const storage = getStorage();
+          const photoRef = ref(storage, `dorms/${dormId}/reviews/${photo.name}`);
+          const snapshot = await uploadBytes(photoRef, photo);
+          const downloadURL = await getDownloadURL(snapshot.ref);
+          return downloadURL;
+        })
+      );
+  
+      const reviewData = {
+        dormName,
+        roomNumber,
+        roomType,
+        review,
+        ratings: { roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating },
+        photos: photoURLs, // Save URLs to photos
+        createdAt: new Date(),
+        userId: userUid,
+      };
+  
       await addDoc(collection(db, "dorms", dormId, "reviews"), reviewData);
-
-      // Update average rating and review count
       await addReviewAndUpdateStats(dormId, newOverallRating);
-
-      // Redirect or notify the user of success
       router.push(`/reviewPage?dormId=${dormId}`);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
+  
 
   return (
     <Box p={4} maxW="xl" mx="auto">
