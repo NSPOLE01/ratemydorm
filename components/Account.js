@@ -63,6 +63,7 @@ const Account = () => {
               src={user.photoURL}
               alt="Profile image"
               mx="auto"
+              referrerpolicy="no-referrer"
             />
             <Heading as="h2" size="xl" mt={6} mb={2}>
               {user.displayName}

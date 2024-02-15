@@ -87,6 +87,7 @@ export default function Navbar() {
                   alt="User"
                   style={{ width: 50, height: 50, borderRadius: "50%" }}
                   cursor="pointer"
+                  referrerpolicy="no-referrer"
                 />
               </NextLink>
               <button onClick={signOutUser}>Sign Out</button>
