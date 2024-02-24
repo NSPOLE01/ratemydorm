@@ -32,7 +32,7 @@ const Hero = () => {
         //search and filter buttons
         if (searchQuery) {
           dormsData = dormsData.filter(dorm => 
-            dorm.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+            dorm.name.toLowerCase().includes(searchQuery.toLowerCase())
           );
         }
         console.log(selectedLocation);
