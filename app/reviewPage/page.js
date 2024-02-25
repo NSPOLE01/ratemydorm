@@ -8,6 +8,7 @@ import { collectionGroup, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { getDormNameFromDormID } from "@/utils";
 import DormReviewCard from "@/components/DormReviewCard";
+import RoomSearch from "../../components/RoomSearch"
 
 const ReviewPage = () => {
   const router = useRouter();
@@ -15,6 +16,7 @@ const ReviewPage = () => {
   const [dormId, setDormId] = useState("");
   const [user, setUser] = useState(null); // State to keep track of the user's auth status
   const [reviews, setReviews] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Set up a listener for authentication state changes
@@ -34,10 +36,26 @@ const ReviewPage = () => {
     // Fetch reviews from DormName collection 
     const fetchReviews = async (dormName) => {
       if (dormName) {
-        const reviewsQuery = query(
-          collectionGroup(db, "reviews"),
-          where("dormName", "==", dormName)
-        );
+        let reviewsQuery;
+        // If searchQuery is not empty, prepare the start and end points for the query to match strings starting with searchQuery
+        if (searchQuery) {
+          const startAtQuery = searchQuery;
+          const endAtQuery = searchQuery.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1));
+          
+          // Query documents where `dormName` matches and `roomNumber` starts with `searchQuery`
+          reviewsQuery = query(
+            collectionGroup(db, "reviews"),
+            where("dormName", "==", dormName),
+            where("roomNumber", ">=", startAtQuery),
+            where("roomNumber", "<", endAtQuery)
+          );
+        } else {
+          // If searchQuery is empty, only filter by dormName
+          reviewsQuery = query(
+            collectionGroup(db, "reviews"),
+            where("dormName", "==", dormName)
+          );
+        }
         const querySnapshot = await getDocs(reviewsQuery);
         const reviewsArray = [];
         querySnapshot.forEach((doc) => {
@@ -53,7 +71,7 @@ const ReviewPage = () => {
       setDormName(dormName);
       fetchReviews(dormName);
     }
-  }, []);
+  }, [searchQuery]);
 
   const handleWriteReview = () => {
     if (user) {
@@ -63,6 +81,8 @@ const ReviewPage = () => {
       alert("You must be logged in to write a review.");
     }
   };
+
+  console.log(searchQuery);
 
   return (
     <Box>
@@ -100,6 +120,9 @@ const ReviewPage = () => {
           Write Review
         </Button>
       </Flex>
+      <RoomSearch 
+        onSearch={(query) => setSearchQuery(query)} 
+      />
 
       <Flex
         flex="1"

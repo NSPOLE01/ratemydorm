@@ -3,13 +3,9 @@ import { Input, InputGroup, Flex, Center, Select, Button } from "@chakra-ui/reac
 
 function SearchBar({
   onSearch,
-  onPriceChange,
   onTagChange,
-  onSortChange,
   searchQuery,
-  selectedPrice,
   selectedTag,
-  selectedSort
 }) {
   return (
     <Flex justifyContent="center" mt={2}>
