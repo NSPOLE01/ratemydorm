@@ -17,6 +17,8 @@ const ReviewPage = () => {
   const [user, setUser] = useState(null); // State to keep track of the user's auth status
   const [reviews, setReviews] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [roomType, setRoomType] = useState('');
+
 
   useEffect(() => {
     // Set up a listener for authentication state changes
@@ -56,6 +58,13 @@ const ReviewPage = () => {
             where("dormName", "==", dormName)
           );
         }
+
+        if (roomType) {
+          reviewsQuery = query(
+            reviewsQuery,
+            where("roomType", "==", roomType)
+          );
+        }
         const querySnapshot = await getDocs(reviewsQuery);
         const reviewsArray = [];
         querySnapshot.forEach((doc) => {
@@ -71,7 +80,7 @@ const ReviewPage = () => {
       setDormName(dormName);
       fetchReviews(dormName);
     }
-  }, [searchQuery]);
+  }, [searchQuery, roomType]);
 
   const handleWriteReview = () => {
     if (user) {
@@ -122,6 +131,8 @@ const ReviewPage = () => {
       </Flex>
       <RoomSearch 
         onSearch={(query) => setSearchQuery(query)} 
+        onTagChange={(room) => setRoomType(room)}
+        selectedTag={roomType}
       />
 
       <Flex
