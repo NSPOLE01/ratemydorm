@@ -9,6 +9,7 @@ import { db } from "@/firebaseConfig";
 import { getDormNameFromDormID } from "@/utils";
 import DormReviewCard from "@/components/DormReviewCard";
 import RoomSearch from "../../components/RoomSearch"
+import DormOverviewCard from "@/components/DormOverviewCard";
 
 const ReviewPage = () => {
   const router = useRouter();
@@ -93,73 +94,45 @@ const ReviewPage = () => {
 
   console.log(searchQuery);
 
+
   return (
-    <Box>
-      <Flex
-        flexDirection="column"
-        align="center"
-        justify="center"
-        py={{ base: 5 }}
-        px={{ base: 4 }}
-      >
-        <Heading
-          fontWeight={500}
-          fontSize={{ base: "xl", sm: "3xl", md: "5xl" }}
-          lineHeight={"110%"}
-        >
-          <Text as="span" color="brand.200">
-            {dormName}
-          </Text>
-          <Text as="span" color="black">
-            {" "}
-            Reviews
-          </Text>
+    <Box py={5} px={4}>
+      <Flex flexDirection="column" align="center" justify="center" mb={5}>
+        <Heading fontWeight={500} fontSize={{ base: "xl", sm: "3xl", md: "5xl" }} lineHeight={"110%"}>
+          <Text as="span" color="brand.200">{dormName}</Text>
+          <Text as="span" color="black"> Reviews</Text>
         </Heading>
-        <Button
-          onClick={handleWriteReview}
-          mt={10}
-          fontSize={"sm"}
-          fontWeight={600}
-          color={"white"}
-          bg={"brand.200"}
-          _hover={{
-            bg: "brand.500",
-          }}
-        >
+        <Button onClick={handleWriteReview} mt={10} fontSize={"sm"} fontWeight={600} color={"white"} bg={"brand.200"} _hover={{ bg: "brand.500" }}>
           Write Review
         </Button>
       </Flex>
-      <RoomSearch 
-        onSearch={(query) => setSearchQuery(query)} 
-        onTagChange={(room) => setRoomType(room)}
-        selectedTag={roomType}
-      />
 
-      <Flex
-        flex="1"
-        flex-direction="column"
+      <RoomSearch onSearch={(query) => setSearchQuery(query)} onTagChange={(room) => setRoomType(room)} selectedTag={roomType} />
 
-        alignItems="center"
-        gap="4"
-        py={{ base: 5 }}
-        px={{ base: 4 }}
-      >
-              {reviews.map((review) => {
-                return(
-                  <DormReviewCard
-                    roomRating={review.ratings.roomRating}
-                    amenitiesRating={review.ratings.amenitiesRating}
-                    bathroomRating={review.ratings.bathroomRating}
-                    buildingRating={review.ratings.buildingRating}
-                    cleanlinessRating={review.ratings.cleanlinessRating}
-                    photo={review.photos[0]}
-                    dormName={review.dormName}
-                    roomNumber={review.roomNumber}
-                    roomType={review.roomType}
-                    review={review.review}
-                  />
-              )
-              })}
+      <Flex direction={{ base: "column", lg: "row" }} mt={5}>
+        <Box minWidth={{ base: "100%", lg: "300px" }} pr={{ lg: 8 }} mt={-7}>
+          <DormOverviewCard dormId={dormId} />
+        </Box>
+
+        <Box flex={1}>
+          <SimpleGrid columns={[1, null, 2, 3]} spacing="20px">
+            {reviews.map((review) => (
+              <DormReviewCard
+                key={review.id}
+                roomRating={review.ratings.roomRating}
+                amenitiesRating={review.ratings.amenitiesRating}
+                bathroomRating={review.ratings.bathroomRating}
+                buildingRating={review.ratings.buildingRating}
+                cleanlinessRating={review.ratings.cleanlinessRating}
+                photo={review.photos[0]}
+                dormName={review.dormName}
+                roomNumber={review.roomNumber}
+                roomType={review.roomType}
+                review={review.review}
+              />
+            ))}
+          </SimpleGrid>
+        </Box>
       </Flex>
     </Box>
   );

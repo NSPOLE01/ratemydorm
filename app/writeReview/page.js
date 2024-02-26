@@ -133,7 +133,7 @@ const WriteReview = () => {
       };
   
       await addDoc(collection(db, "dorms", dormId, "reviews"), reviewData);
-      await addReviewAndUpdateStats(dormId, newOverallRating);
+      await addReviewAndUpdateStats(dormId, newOverallRating, roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating);
       router.push(`/reviewPage?dormId=${dormId}`);
     } catch (e) {
       console.error("Error adding document: ", e);
