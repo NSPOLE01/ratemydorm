@@ -228,7 +228,7 @@ const WriteReview = () => {
             </FormControl>
 
             {/* File input for uploading photos */}
-            <FormControl mb={4}>
+            <FormControl mb={4} isRequired>
               <FormLabel htmlFor="photos" fontSize="lg">
                 Upload Photos:
               </FormLabel>
