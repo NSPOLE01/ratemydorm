@@ -75,6 +75,7 @@
 import React from "react";
 import { Button, Center, Image, VStack, Text } from "@chakra-ui/react";
 import { Google } from "react-bootstrap-icons";
+import { useToast } from "@chakra-ui/react";
 import {
   auth,
   GoogleAuthProvider,
@@ -86,6 +87,7 @@ import { useRouter } from "next/navigation";
 
 const SignInPage = () => {
   const router = useRouter();
+  const toast = useToast();
 
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
@@ -94,7 +96,21 @@ const SignInPage = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       const user = result.user;
-      localStorage.setItem("userEmail", user.email);
+      if (user.email && user.email.endsWith("@vanderbilt.edu")) {
+        console.log("Authenticated successfully");
+        localStorage.setItem("userEmail", user.email);
+      } else {
+        toast({
+          title: "Unauthorized email domain.",
+          description: "You must use a Vanderbilt email to log in.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom",
+        });
+        console.error("You must use a Vanderbilt email to log in.");
+        auth.signOut();
+      }
 
       await setDoc(doc(db, "users", user.uid), {
         name: user.displayName,
@@ -104,7 +120,14 @@ const SignInPage = () => {
 
       router.push("/homePage");
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "An error occurred.",
+        description: `Error signing in: ${error.message}`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
   };
 
