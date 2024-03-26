@@ -1,6 +1,6 @@
 // app/reviewPage/page.js
 "use client";
-import { Box, Flex, Heading, Button, Text, SimpleGrid} from "@chakra-ui/react";
+import { Box, Flex, Heading, Button, Text, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -8,7 +8,7 @@ import { collectionGroup, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { getDormNameFromDormID } from "@/utils";
 import DormReviewCard from "@/components/DormReviewCard";
-import RoomSearch from "../../components/RoomSearch"
+import RoomSearch from "../../components/RoomSearch";
 import DormOverviewCard from "@/components/DormOverviewCard";
 
 const ReviewPage = () => {
@@ -17,9 +17,8 @@ const ReviewPage = () => {
   const [dormId, setDormId] = useState("");
   const [user, setUser] = useState(null); // State to keep track of the user's auth status
   const [reviews, setReviews] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [roomType, setRoomType] = useState('');
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roomType, setRoomType] = useState("");
 
   useEffect(() => {
     // Set up a listener for authentication state changes
@@ -36,15 +35,17 @@ const ReviewPage = () => {
     // Fetch the dormName from the URL parameters
     const dormId = new URLSearchParams(window.location.search).get("dormId");
 
-    // Fetch reviews from DormName collection 
+    // Fetch reviews from DormName collection
     const fetchReviews = async (dormName) => {
       if (dormName) {
         let reviewsQuery;
         // If searchQuery is not empty, prepare the start and end points for the query to match strings starting with searchQuery
         if (searchQuery) {
           const startAtQuery = searchQuery;
-          const endAtQuery = searchQuery.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1));
-          
+          const endAtQuery = searchQuery.replace(/.$/, (c) =>
+            String.fromCharCode(c.charCodeAt(0) + 1)
+          );
+
           // Query documents where `dormName` matches and `roomNumber` starts with `searchQuery`
           reviewsQuery = query(
             collectionGroup(db, "reviews"),
@@ -61,10 +62,7 @@ const ReviewPage = () => {
         }
 
         if (roomType) {
-          reviewsQuery = query(
-            reviewsQuery,
-            where("roomType", "==", roomType)
-          );
+          reviewsQuery = query(reviewsQuery, where("roomType", "==", roomType));
         }
         const querySnapshot = await getDocs(reviewsQuery);
         const reviewsArray = [];
@@ -94,20 +92,40 @@ const ReviewPage = () => {
 
   console.log(searchQuery);
 
-
   return (
     <Box py={5} px={4}>
       <Flex flexDirection="column" align="center" justify="center" mb={5}>
-        <Heading fontWeight={500} fontSize={{ base: "xl", sm: "3xl", md: "5xl" }} lineHeight={"110%"}>
-          <Text as="span" color="brand.200">{dormName}</Text>
-          <Text as="span" color="black"> Reviews</Text>
+        <Heading
+          fontWeight={500}
+          fontSize={{ base: "xl", sm: "3xl", md: "5xl" }}
+          lineHeight={"110%"}
+        >
+          <Text as="span" color="brand.200">
+            {dormName}
+          </Text>
+          <Text as="span" color="black">
+            {" "}
+            Reviews
+          </Text>
         </Heading>
-        <Button onClick={handleWriteReview} mt={10} fontSize={"sm"} fontWeight={600} color={"white"} bg={"brand.200"} _hover={{ bg: "brand.500" }}>
+        <Button
+          onClick={handleWriteReview}
+          mt={10}
+          fontSize={"sm"}
+          fontWeight={600}
+          color={"white"}
+          bg={"brand.200"}
+          _hover={{ bg: "brand.500" }}
+        >
           Write Review
         </Button>
       </Flex>
 
-      <RoomSearch onSearch={(query) => setSearchQuery(query)} onTagChange={(room) => setRoomType(room)} selectedTag={roomType} />
+      <RoomSearch
+        onSearch={(query) => setSearchQuery(query)}
+        onTagChange={(room) => setRoomType(room)}
+        selectedTag={roomType}
+      />
 
       <Flex direction={{ base: "column", lg: "row" }} mt={5}>
         <Box minWidth={{ base: "100%", lg: "300px" }} pr={{ lg: 8 }} mt={-7}>
@@ -119,6 +137,7 @@ const ReviewPage = () => {
             {reviews.map((review) => (
               <DormReviewCard
                 key={review.id}
+                reviewId={review.id}
                 roomRating={review.ratings.roomRating}
                 amenitiesRating={review.ratings.amenitiesRating}
                 bathroomRating={review.ratings.bathroomRating}
