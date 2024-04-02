@@ -30,6 +30,7 @@ const DormReviewCard = ({
   bathroomRating,
   buildingRating,
   cleanlinessRating,
+  overallRating,
   photo,
   dormName,
   roomNumber,
@@ -65,14 +66,6 @@ const DormReviewCard = ({
     West: "west",
   };
 
-  const renderStars = (rating) => {
-    let stars = [];
-    for (let i = 0; i < 5; i++) {
-      stars.push(<span key={i}>{i < rating ? "★" : "☆"}</span>);
-    }
-    return stars;
-  };
-
   const [comment, setComment] = useState("");
 
   const addCommentToFirestore = async () => {
@@ -100,6 +93,17 @@ const DormReviewCard = ({
       console.error("Error adding comment: ", error);
     }
   };
+
+  const getRatingColorScheme = (rating) => {
+    if (rating >= 4) {
+      return "green";
+    } else if (rating >= 3) {
+      return "yellow";
+    } else {
+      return "red";
+    }
+  };
+
   return (
     <>
       <Box
@@ -114,8 +118,13 @@ const DormReviewCard = ({
         {/* ... existing image code remains unchanged */}
         <Box p={5}>
           <Flex alignItems="center" justifyContent="space-between" mb={2}>
-            <Badge borderRadius="full" px="2" colorScheme="green" mr={2}>
-              Overall 4
+            <Badge
+              borderRadius="full"
+              px="2"
+              colorScheme={getRatingColorScheme(overallRating)}
+              mr={2}
+            >
+              Overall {overallRating}
             </Badge>
             <Badge borderRadius="full" px="2" colorScheme="purple">
               {roomNumber} {roomType}
@@ -192,8 +201,13 @@ const DormReviewCard = ({
           <ModalBody>
             <Image src={photo} alt={`${dormName} room`} boxSize="full" mb={2} />
             <Flex alignItems="center" justifyContent="space-between" mb={2}>
-              <Badge borderRadius="full" px="2" colorScheme="green" mr={2}>
-                Overall 4
+              <Badge
+                borderRadius="full"
+                px="2"
+                colorScheme={getRatingColorScheme(overallRating)}
+                mr={2}
+              >
+                Overall {overallRating}
               </Badge>
               <Badge borderRadius="full" px="2" colorScheme="purple">
                 {roomNumber} {roomType}

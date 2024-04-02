@@ -26,7 +26,6 @@ import { addReviewAndUpdateStats } from "@/firebaseFunctions/firebaseWrite";
 import { getDormNameFromDormID } from "@/utils";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-
 // update the stars based on the rating
 const StarRating = ({ rating, setRating }) => {
   return (
@@ -101,45 +100,69 @@ const WriteReview = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isValidRoomNumber(roomNumber)) {
       alert("Invalid room number. Please enter a valid room number.");
       return;
     }
-  
-    const newOverallRating = [roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating].reduce((acc, curr) => acc + curr, 0) / 5;
-  
+
+    const newOverallRating =
+      [
+        roomRating,
+        buildingRating,
+        bathroomRating,
+        cleanlinessRating,
+        amenitiesRating,
+      ].reduce((acc, curr) => acc + curr, 0) / 5;
+
     try {
       // Upload photos to Firebase Storage and get their URLs
       const photoURLs = await Promise.all(
         photos.map(async (photo) => {
           const storage = getStorage();
-          const photoRef = ref(storage, `dorms/${dormId}/reviews/${photo.name}`);
+          const photoRef = ref(
+            storage,
+            `dorms/${dormId}/reviews/${photo.name}`
+          );
           const snapshot = await uploadBytes(photoRef, photo);
           const downloadURL = await getDownloadURL(snapshot.ref);
           return downloadURL;
         })
       );
-  
+
       const reviewData = {
         dormName,
         roomNumber,
         roomType,
         review,
-        ratings: { roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating },
+        ratings: {
+          roomRating,
+          buildingRating,
+          bathroomRating,
+          cleanlinessRating,
+          amenitiesRating,
+        },
+        overallRating: newOverallRating,
         photos: photoURLs, // Save URLs to photos
         createdAt: new Date(),
         userId: userUid,
       };
-  
+
       await addDoc(collection(db, "dorms", dormId, "reviews"), reviewData);
-      await addReviewAndUpdateStats(dormId, newOverallRating, roomRating, buildingRating, bathroomRating, cleanlinessRating, amenitiesRating);
+      await addReviewAndUpdateStats(
+        dormId,
+        newOverallRating,
+        roomRating,
+        buildingRating,
+        bathroomRating,
+        cleanlinessRating,
+        amenitiesRating
+      );
       router.push(`/reviewPage?dormId=${dormId}`);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
-  
 
   return (
     <Box p={4} maxW="xl" mx="auto">

@@ -143,6 +143,7 @@ const ReviewPage = () => {
                 bathroomRating={review.ratings.bathroomRating}
                 buildingRating={review.ratings.buildingRating}
                 cleanlinessRating={review.ratings.cleanlinessRating}
+                overallRating={review.overallRating}
                 photo={review.photos[0]}
                 dormName={review.dormName}
                 roomNumber={review.roomNumber}
