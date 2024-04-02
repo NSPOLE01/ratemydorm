@@ -21,6 +21,7 @@ import {
 import React, { useState } from "react";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import { StarRating } from "./DormOverviewCard";
 
 const DormReviewCard = ({
   reviewId,
@@ -102,94 +103,84 @@ const DormReviewCard = ({
   return (
     <>
       <Box
-        onClick={onOpen}
         borderWidth="1px"
         borderRadius="lg"
         overflow="hidden"
         maxW="lg"
-        display="flex"
-        flexDirection="column"
+        borderColor="gray.200"
+        onClick={onOpen}
         cursor="pointer"
       >
-        <Box
-          flex="1"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-        >
-          <Center pt={4} px={2}>
-            <Image src={photo} alt={`${dormName} room`} boxSize="12em" />{" "}
-          </Center>
-        </Box>
-        <Box
-          flex="1"
-          display="flex"
-          flexDirection="column"
-          justifyContent="end"
-        >
-          <Flex direction="column" p={5}>
-            <Badge borderRadius="full" px="2" colorScheme="teal" mt={4}>
-              {dormName}
+        {/* ... existing image code remains unchanged */}
+        <Box p={5}>
+          <Flex alignItems="center" justifyContent="space-between" mb={2}>
+            <Badge borderRadius="full" px="2" colorScheme="green" mr={2}>
+              Overall 4
             </Badge>
-            <HStack spacing={4} mt={2}>
-              <Box fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
-                {roomNumber}
+            <Badge borderRadius="full" px="2" colorScheme="purple">
+              {roomNumber} {roomType}
+            </Badge>
+          </Flex>
+          <Text color="gray.600" fontSize="md" noOfLines={[1, 2, 3]}>
+            {review}
+          </Text>
+          {/* Ratings */}
+          <VStack align="start" mt={4} spacing={4}>
+            <HStack>
+              <Text as="span" fontSize="sm" color="gray.600">
+                Room
+              </Text>
+              <Box display="flex" ml={2}>
+                <StarRating rating={roomRating} />
               </Box>
-              <Badge borderRadius="full" px="2" colorScheme="gray">
-                {roomType}
-              </Badge>
             </HStack>
 
-            <VStack align="start" mt={4} spacing={4}>
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Room
-                </Text>
-                <Box display="flex" ml={2}>
-                  {renderStars(roomRating)}
-                </Box>
-              </HStack>
-
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Amenities
-                </Text>
-                <Box display="flex" ml={2}>
-                  {renderStars(amenitiesRating)}
-                </Box>
-              </HStack>
-
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Bathroom
-                </Text>
-                <Box display="flex" ml={2}>
-                  {renderStars(bathroomRating)}
-                </Box>
-              </HStack>
-
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Building
-                </Text>
-                <Box display="flex" ml={2}>
-                  {renderStars(buildingRating)}
-                </Box>
-              </HStack>
-
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Cleanliness
-                </Text>
-                <Box display="flex" ml={2}>
-                  {renderStars(cleanlinessRating)}
-                </Box>
-              </HStack>
-              <Text as="span" fontSize="md" color="black">
-                {review}
+            <HStack>
+              <Text as="span" fontSize="sm" color="gray.600">
+                Amenities
               </Text>
-            </VStack>
-          </Flex>
+              <Box display="flex" ml={2}>
+                <StarRating rating={amenitiesRating} />
+              </Box>
+            </HStack>
+
+            <HStack>
+              <Text as="span" fontSize="sm" color="gray.600">
+                Bathroom
+              </Text>
+              <Box display="flex" ml={2}>
+                <StarRating rating={bathroomRating} />
+              </Box>
+            </HStack>
+
+            <HStack>
+              <Text as="span" fontSize="sm" color="gray.600">
+                Building
+              </Text>
+              <Box display="flex" ml={2}>
+                <StarRating rating={buildingRating} />
+              </Box>
+            </HStack>
+
+            <HStack>
+              <Text as="span" fontSize="sm" color="gray.600">
+                Cleanliness
+              </Text>
+              <Box display="flex" ml={2}>
+                <StarRating rating={cleanlinessRating} />
+              </Box>
+            </HStack>
+          </VStack>
+          <Box
+            flex="1"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+          >
+            <Center pt={4} px={2}>
+              <Image src={photo} alt={`${dormName} room`} boxSize="12em" />{" "}
+            </Center>
+          </Box>
         </Box>
       </Box>
 
@@ -199,20 +190,65 @@ const DormReviewCard = ({
           <ModalHeader>{dormName} Information</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Image src={photo} alt={`${dormName} room`} boxSize="full" />
-            <Badge borderRadius="full" px="2" colorScheme="teal" mt={4}>
-              {dormName}
-            </Badge>
-            <Text mt={2}>{`Room Number: ${roomNumber}`}</Text>
-            <Text>{`Room Type: ${roomType}`}</Text>
-            <Text mt={4}>Ratings:</Text>
-            <Box mt={2}>Room: {renderStars(roomRating)}</Box>
-            <Box>Amenities: {renderStars(amenitiesRating)}</Box>
-            <Box>Bathroom: {renderStars(bathroomRating)}</Box>
-            <Box>Building: {renderStars(buildingRating)}</Box>
-            <Box>Cleanliness: {renderStars(cleanlinessRating)}</Box>
-            <Text mt={4}>Review:</Text>
-            <Text>{review}</Text>
+            <Image src={photo} alt={`${dormName} room`} boxSize="full" mb={2} />
+            <Flex alignItems="center" justifyContent="space-between" mb={2}>
+              <Badge borderRadius="full" px="2" colorScheme="green" mr={2}>
+                Overall 4
+              </Badge>
+              <Badge borderRadius="full" px="2" colorScheme="purple">
+                {roomNumber} {roomType}
+              </Badge>
+            </Flex>
+            <Text color="gray.600" fontSize="md" noOfLines={[1, 2, 3]}>
+              {review}
+            </Text>
+            {/* Ratings */}
+            <VStack align="start" mt={4} spacing={4}>
+              <HStack>
+                <Text as="span" fontSize="sm" color="gray.600">
+                  Room
+                </Text>
+                <Box display="flex" ml={2}>
+                  <StarRating rating={roomRating} />
+                </Box>
+              </HStack>
+
+              <HStack>
+                <Text as="span" fontSize="sm" color="gray.600">
+                  Amenities
+                </Text>
+                <Box display="flex" ml={2}>
+                  <StarRating rating={amenitiesRating} />
+                </Box>
+              </HStack>
+
+              <HStack>
+                <Text as="span" fontSize="sm" color="gray.600">
+                  Bathroom
+                </Text>
+                <Box display="flex" ml={2}>
+                  <StarRating rating={bathroomRating} />
+                </Box>
+              </HStack>
+
+              <HStack>
+                <Text as="span" fontSize="sm" color="gray.600">
+                  Building
+                </Text>
+                <Box display="flex" ml={2}>
+                  <StarRating rating={buildingRating} />
+                </Box>
+              </HStack>
+
+              <HStack>
+                <Text as="span" fontSize="sm" color="gray.600">
+                  Cleanliness
+                </Text>
+                <Box display="flex" ml={2}>
+                  <StarRating rating={cleanlinessRating} />
+                </Box>
+              </HStack>
+            </VStack>
           </ModalBody>
           <ModalFooter>
             <Textarea

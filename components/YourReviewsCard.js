@@ -5,16 +5,9 @@ import {
   signInWithPopup,
   db,
 } from "@/firebaseConfig";
+import { StarRating } from "./DormOverviewCard";
 
 const YourReviewsCard = ({ starRating, photo, dormName, roomNumber }) => {
-  const renderStars = () => {
-    let stars = [];
-    for (let i = 0; i < 5; i++) {
-      stars.push(<span key={i}>{i < starRating ? "★" : "☆"}</span>);
-    }
-    return stars;
-  };
-
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" maxW="sm">
       <Image src={photo} alt={`${dormName} room`} />
@@ -35,7 +28,7 @@ const YourReviewsCard = ({ starRating, photo, dormName, roomNumber }) => {
         </Box>
 
         <Box display="flex" mt="2" alignItems="center">
-          {renderStars()}
+          <StarRating rating={starRating} />
         </Box>
       </Box>
     </Box>
