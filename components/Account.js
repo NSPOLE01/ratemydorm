@@ -79,17 +79,9 @@ const Account = () => {
 
           <SimpleGrid columns={3} spacing={10}>
             {reviews.map((review) => {
-              const totalRating =
-                review.ratings.amenitiesRating +
-                review.ratings.bathroomRating +
-                review.ratings.buildingRating +
-                review.ratings.cleanlinessRating +
-                review.ratings.roomRating;
-              const averageRating = Math.round(totalRating / 5);
-
               return (
                 <YourReviewsCard
-                  starRating={averageRating}
+                  starRating={review.overallRating}
                   photo={review.photos[0]}
                   dormName={review.dormName}
                   roomNumber={review.roomNumber}

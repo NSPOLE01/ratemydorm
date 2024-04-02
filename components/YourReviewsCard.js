@@ -1,4 +1,4 @@
-import { Box, Image, Badge, Text } from "@chakra-ui/react";
+import { Box, Image, Badge, Text, Flex } from "@chakra-ui/react";
 import {
   auth,
   GoogleAuthProvider,
@@ -6,30 +6,28 @@ import {
   db,
 } from "@/firebaseConfig";
 import { StarRating } from "./DormOverviewCard";
+import { getRatingColorScheme } from "./DormReviewCard";
 
 const YourReviewsCard = ({ starRating, photo, dormName, roomNumber }) => {
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" maxW="sm">
       <Image src={photo} alt={`${dormName} room`} />
       <Box p={5}>
-        <Badge borderRadius="full" px="2" colorScheme="teal">
-          {dormName}
-        </Badge>
+        <Flex alignItems="center" justifyContent="space-between" mb={2}>
+          <Badge
+            borderRadius="full"
+            px="2"
+            colorScheme={getRatingColorScheme(starRating)}
+            mr={2}
+          >
+            Overall {starRating}
+          </Badge>
+          <Badge borderRadius="full" px="2" colorScheme="purple">
+            {dormName} {roomNumber}
+          </Badge>
+        </Flex>
 
-        <Box
-          mt="2"
-          mb="2"
-          fontWeight="semibold"
-          as="h4"
-          lineHeight="tight"
-          isTruncated
-        >
-          {roomNumber}
-        </Box>
-
-        <Box display="flex" mt="2" alignItems="center">
-          <StarRating rating={starRating} />
-        </Box>
+        <StarRating rating={starRating} />
       </Box>
     </Box>
   );

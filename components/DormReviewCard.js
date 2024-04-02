@@ -23,6 +23,16 @@ import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { StarRating } from "./DormOverviewCard";
 
+export const getRatingColorScheme = (rating) => {
+  if (rating >= 4) {
+    return "green";
+  } else if (rating >= 3) {
+    return "yellow";
+  } else {
+    return "red";
+  }
+};
+
 const DormReviewCard = ({
   reviewId,
   roomRating,
@@ -91,16 +101,6 @@ const DormReviewCard = ({
       onClose();
     } catch (error) {
       console.error("Error adding comment: ", error);
-    }
-  };
-
-  const getRatingColorScheme = (rating) => {
-    if (rating >= 4) {
-      return "green";
-    } else if (rating >= 3) {
-      return "yellow";
-    } else {
-      return "red";
     }
   };
 
