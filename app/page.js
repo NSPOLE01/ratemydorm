@@ -2,7 +2,7 @@
 
 import LandingPage from "@/components/LandingPage";
 import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "./layout"; // Make sure this import path is correct
+import { theme } from "./layout"; 
 import { app } from "@/firebaseConfig";
 import Hero from "@/components/Hero";
 import React, { useEffect, useState } from "react";

@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-
+import { Helmet } from "react-helmet";
 
 const colors = {
   brand: {
@@ -21,6 +21,9 @@ export const theme = extendTheme({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <Helmet>
+        <title>Rate My Dorm</title>
+      </Helmet>
       <body>
         <ChakraProvider theme={theme}>
           <Navbar />
