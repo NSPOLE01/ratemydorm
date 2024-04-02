@@ -38,16 +38,14 @@ const LandingPage = () => {
             <Button
               as={"a"}
               variant={"outline"}
-              color={"brand.200"}
+              bg={"brand.200"}
               borderColor={"brand.200"}
               borderWidth={"3px"}
               borderRadius={"full"}
               href={"signin"}
+              color={"white"}
             >
               SIGN IN
-            </Button>
-            <Button bg={"brand.200"} color="white" borderRadius="full">
-              SIGN UP
             </Button>
           </Stack>
         </Stack>
