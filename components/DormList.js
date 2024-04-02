@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import DormCard from "./DormCard"; // Assuming this is the path to your DormCard component
+import DormCard from "./DormCard";
 
 const DormList = ({ dorms }) => {
   return (

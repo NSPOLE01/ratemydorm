@@ -85,7 +85,7 @@ const Account = () => {
                 review.ratings.buildingRating +
                 review.ratings.cleanlinessRating +
                 review.ratings.roomRating;
-              const averageRating = Math.round(totalRating / 5); // Assuming there are always 5 rating categories
+              const averageRating = Math.round(totalRating / 5);
 
               return (
                 <YourReviewsCard
