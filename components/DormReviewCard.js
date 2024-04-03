@@ -22,6 +22,7 @@ import React, { useState } from "react";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { StarRating } from "./DormOverviewCard";
+import { getAuth } from "firebase/auth";
 
 export const getRatingColorScheme = (rating) => {
   if (rating >= 4) {
@@ -47,6 +48,9 @@ const DormReviewCard = ({
   roomType,
   review,
 }) => {
+  const auth = getAuth();
+  const userUid = auth.currentUser?.uid;
+  console.log(userUid);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dormNameMap = {
     "Chaffin Place": "chaffin-place",
@@ -80,7 +84,6 @@ const DormReviewCard = ({
 
   const addCommentToFirestore = async () => {
     if (comment.trim() === "") return;
-    console.log(reviewId);
 
     try {
       const commentsRef = collection(
@@ -95,6 +98,7 @@ const DormReviewCard = ({
       await addDoc(commentsRef, {
         text: comment,
         createdAt: new Date(),
+        userId: userUid,
       });
 
       setComment("");
