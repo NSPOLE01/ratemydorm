@@ -99,6 +99,8 @@ const DormReviewCard = ({
         text: comment,
         createdAt: new Date(),
         userId: userUid,
+        dormName: dormName,
+        roomNumber: roomNumber,
       });
 
       setComment("");
