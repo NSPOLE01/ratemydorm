@@ -143,7 +143,7 @@ const WriteReview = () => {
           amenitiesRating,
         },
         overallRating: newOverallRating,
-        photos: photoURLs, // Save URLs to photos
+        photos: photoURLs,
         createdAt: new Date(),
         userId: userUid,
       };

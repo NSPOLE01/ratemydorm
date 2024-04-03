@@ -52,6 +52,11 @@ const Account = () => {
     };
   }, []);
 
+  const handleDeleteReview = (reviewId) => {
+    const updatedReviews = reviews.filter((review) => review.id !== reviewId);
+    setReviews(updatedReviews);
+  };
+
   return (
     <div>
       {user && (
@@ -85,6 +90,8 @@ const Account = () => {
                   photo={review.photos[0]}
                   dormName={review.dormName}
                   roomNumber={review.roomNumber}
+                  reviewID={review.id}
+                  handleDeleteReview={handleDeleteReview}
                 />
               );
             })}
