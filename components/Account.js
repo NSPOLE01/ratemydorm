@@ -51,11 +51,11 @@ const Account = () => {
       unsubscribe();
     };
   }, []);
-
   const handleDeleteReview = (reviewId) => {
     const updatedReviews = reviews.filter((review) => review.id !== reviewId);
     setReviews(updatedReviews);
   };
+
 
   return (
     <div>

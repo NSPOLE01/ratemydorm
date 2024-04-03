@@ -16,7 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FiTrash2 } from "react-icons/fi";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, getDoc } from "firebase/firestore";
 import {
   auth,
   GoogleAuthProvider,
@@ -25,6 +25,7 @@ import {
 } from "@/firebaseConfig";
 import { StarRating } from "./DormOverviewCard";
 import { getRatingColorScheme } from "./DormReviewCard";
+import { deleteReviewAndUpdateStats } from "@/firebaseFunctions/firebaseWrite";
 
 const YourReviewsCard = ({
   starRating,
@@ -67,17 +68,39 @@ const YourReviewsCard = ({
   const handleDelete = async () => {
     onClose();
     const dormDocument = dormNameMap[dormName];
-
     try {
-      await deleteDoc(doc(db, "dorms", dormDocument, "reviews", reviewID));
-      handleDeleteReview(reviewID);
-      toast({
-        title: "Review deleted.",
-        description: "The review has been successfully deleted.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+      const reviewRef = doc(db, "dorms", dormDocument, "reviews", reviewID);
+      const reviewSnap = await getDoc(reviewRef);
+      if (reviewSnap.exists()) {
+        const {
+          roomRating,
+          buildingRating,
+          bathroomRating,
+          cleanlinessRating,
+          amenitiesRating,
+        } = reviewSnap.data().ratings;
+        await deleteReviewAndUpdateStats(
+          dormDocument,
+          roomRating,
+          buildingRating,
+          bathroomRating,
+          cleanlinessRating,
+          amenitiesRating
+        );
+        // Now, delete the review
+        await deleteDoc(doc(db, "dorms", dormDocument, "reviews", reviewID));
+        handleDeleteReview(reviewID);
+        toast({
+          title: "Review deleted.",
+          description:
+            "The review has been successfully deleted and statistics updated.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        throw new Error("Review does not exist.");
+      }
     } catch (error) {
       toast({
         title: "Error",
