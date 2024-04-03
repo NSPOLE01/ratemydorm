@@ -1,22 +1,15 @@
 import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { app, db } from "@/firebaseConfig";
-import {
-  Box,
-  Image,
-  Badge,
-  Grid,
-  GridItem,
-  Heading,
-  Text,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { Box, Image, Heading, Text, SimpleGrid } from "@chakra-ui/react";
 import YourReviewsCard from "./YourReviewsCard";
 import { collectionGroup, query, where, getDocs } from "firebase/firestore";
+import YourCommentsCard from "./YourCommentsCard";
 
 const Account = () => {
   const [user, setUser] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -27,12 +20,21 @@ const Account = () => {
           collectionGroup(db, "reviews"),
           where("userId", "==", userID)
         );
+        const commentsQuery = query(
+          collectionGroup(db, "comments"),
+          where("userId", "==", userID)
+        );
         const querySnapshot = await getDocs(reviewsQuery);
         const reviewsArray = [];
         querySnapshot.forEach((doc) => {
           reviewsArray.push({ id: doc.id, ...doc.data() });
         });
-        console.log(reviewsArray);
+        const commentsSnapshot = await getDocs(commentsQuery);
+        const commentsArray = [];
+        commentsSnapshot.forEach((doc) => {
+          commentsArray.push({ id: doc.id, ...doc.data() });
+        });
+        setComments(commentsArray);
         setReviews(reviewsArray);
       }
     };
@@ -82,10 +84,11 @@ const Account = () => {
             Your Reviews
           </Heading>
 
-          <SimpleGrid columns={3} spacing={10}>
-            {reviews.map((review) => {
-              return (
+          {reviews.length > 0 ? (
+            <SimpleGrid columns={3} spacing={10}>
+              {reviews.map((review) => (
                 <YourReviewsCard
+                  key={review.id}
                   starRating={review.overallRating}
                   photo={review.photos[0]}
                   dormName={review.dormName}
@@ -93,9 +96,35 @@ const Account = () => {
                   reviewID={review.id}
                   handleDeleteReview={handleDeleteReview}
                 />
-              );
-            })}
-          </SimpleGrid>
+              ))}
+            </SimpleGrid>
+          ) : (
+            <Box width="full" p={5} textAlign="center">
+              <Text fontSize="xl" color="gray.600">
+                You have no reviews
+              </Text>
+            </Box>
+          )}
+
+          <Heading as="h3" size="lg" mb={4}>
+            Your Comments
+          </Heading>
+
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <YourCommentsCard
+                key={comment.id}
+                commentText={comment.text}
+                timestamp={comment.createdAt}
+                dormName={comment.dormName}
+                roomNumber={comment.roomNumber}
+              />
+            ))
+          ) : (
+            <Text fontSize="xl" color="gray.600" textAlign="center">
+              You have no comments.
+            </Text>
+          )}
         </Box>
       )}
     </div>
