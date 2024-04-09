@@ -93,24 +93,25 @@ const ReviewPage = () => {
   console.log(searchQuery);
 
   return (
-    <Box py={5} px={4}>
+    <Box py={10} px={4}>
       <Flex flexDirection="column" align="center" justify="center" mb={5}>
         <Heading
           fontWeight={500}
           fontSize={{ base: "xl", sm: "3xl", md: "5xl" }}
           lineHeight={"110%"}
         >
-          <Text as="span" color="brand.200">
+          <Text as="span" color="black" fontWeight={600}>
             {dormName}
           </Text>
-          <Text as="span" color="black">
+          <Text as="span" color="black" fontWeight={600}>
             {" "}
             Reviews
           </Text>
         </Heading>
         <Button
           onClick={handleWriteReview}
-          mt={10}
+          mt={6}
+          mb={4}
           fontSize={"sm"}
           fontWeight={600}
           color={"white"}

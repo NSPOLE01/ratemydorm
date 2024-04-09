@@ -12,6 +12,8 @@ import {
   Button,
   extendTheme,
   Icon,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
 
@@ -96,100 +98,113 @@ function DormOverviewCard({ dormId }) {
       {isDataLoaded && averages.overallAverageRating > 0 && (
         <Center>
           <Box
-            borderWidth="1px"
+            borderWidth="0px"
             borderRadius="lg"
             overflow="hidden"
             maxW="lg"
             w="300px"
             m={7}
+            mr={2.5}
+            mt={2.5}
             p={5}
           >
             <Text
               as="div"
               fontWeight={700}
-              fontSize="1.5rem"
-              textAlign="center"
+              fontSize="1.25rem"
+              textAlign="left"
             >
               {" "}
-              {/* Center align text */}
+              {/* Left align text */}
               Overall Rating
-              <br />
+            </Text>
               <span
                 style={{
                   display: "flex",
                   alignItems: "center",
                   fontSize: "2.5rem",
-                  justifyContent: "center",
+                  justifyContent: "left",
                 }}
               >
                 {" "}
-                {/* Center align flex content */}
-                {averages.overallAverageRating}
+                {/* Left align flex content */}
                 <FaStar
                   key="half"
                   color="#A8996E"
-                  style={{ marginLeft: "20px", width: "40px", height: "40px" }}
+                  style={{ marginRight: "20px", width: "40px", height: "40px" }}
                 />
+                <Text fontWeight={900}>
+                 {averages.overallAverageRating}
+                </Text>
               </span>
-            </Text>
             <Text
               as="div"
               fontWeight={700}
-              fontSize="1.3rem"
-              mt={3}
-              textAlign="center"
+              fontSize="1.25rem"
+              mt={2}
+              textAlign="left"
             >
               {" "}
               {/* Center align text */}
-              Breakdown
+              Rating Breakdown
             </Text>
-            <Box as="div" textAlign="center">
-              {" "}
-              {/* Center align text */}
-              <Text mb={2} mt={2}>
-                Room
-              </Text>
-              <Center>
-                {" "}
-                {/* Center align StarRating */}
-                <StarRating rating={averages.averageRoomRating ?? 0} />
-              </Center>
-              <Text mb={2} mt={2}>
-                Amenities
-                <br />
-              </Text>
-              <Center>
-                {" "}
-                {/* Center align StarRating */}
-                <StarRating rating={averages.averageAmenitiesRating ?? 0} />
-              </Center>
-              <Text mb={2} mt={2}>
-                Bathroom
-                <br />
-              </Text>
-              <Center>
-                {" "}
-                {/* Center align StarRating */}
-                <StarRating rating={averages.averageBathroomRating ?? 0} />
-              </Center>
-              <Text mb={2} mt={2}>
-                Building
-                <br />
-              </Text>
-              <Center>
-                {" "}
-                {/* Center align StarRating */}
-                <StarRating rating={averages.averageBuildingRating ?? 0} />
-              </Center>
-              <Text mb={2} mt={2}>
-                Cleanliness
-                <br />
-              </Text>
-              <Center>
-                {" "}
-                {/* Center align StarRating */}
-                <StarRating rating={averages.averageCleanlinessRating ?? 0} />
-              </Center>
+            <Box as="div" textAlign="left" mt={4}>
+
+              <Grid templateColumns='repeat(5, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={3} display="flex" alignItems="center">
+                  <Text>
+                    Room
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={averages.averageRoomRating ?? 0} />
+                </GridItem>
+              </Grid>
+
+              <Grid templateColumns='repeat(5, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={3} display="flex" alignItems="center">
+                  <Text>
+                    Amenities
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={averages.averageAmenitiesRating ?? 0} />
+                </GridItem>
+              </Grid>
+
+              <Grid templateColumns='repeat(5, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={3} display="flex" alignItems="center">
+                  <Text>
+                    Bathroom
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={averages.averageBathroomRating ?? 0} />
+                </GridItem>
+              </Grid>
+
+              <Grid templateColumns='repeat(5, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={3} display="flex" alignItems="center">
+                  <Text>
+                    Building
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={averages.averageBuildingRating ?? 0} />
+                </GridItem>
+              </Grid>
+
+              <Grid templateColumns='repeat(5, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={3} display="flex" alignItems="center">
+                  <Text>
+                    Cleanliness
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={averages.averageCleanlinessRating ?? 0} />
+                </GridItem>
+              </Grid>
+
             </Box>
           </Box>
         </Center>

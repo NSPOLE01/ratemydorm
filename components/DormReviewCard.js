@@ -17,6 +17,8 @@ import {
   useDisclosure,
   Button,
   Textarea,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { addDoc, collection, doc } from "firebase/firestore";
@@ -136,56 +138,65 @@ const DormReviewCard = ({
               {roomNumber} {roomType}
             </Badge>
           </Flex>
-          <Text color="gray.600" fontSize="md" noOfLines={[1, 2, 3]}>
+          <Text color="black" fontWeight={600} fontSize="md" noOfLines={[1, 2, 3]} mt={5} mb={5}>
             {review}
           </Text>
           {/* Ratings */}
-          <VStack align="start" mt={4} spacing={4}>
-            <HStack>
-              <Text as="span" fontSize="sm" color="gray.600">
-                Room
-              </Text>
-              <Box display="flex" ml={2}>
-                <StarRating rating={roomRating} />
-              </Box>
-            </HStack>
+          <Grid templateColumns='repeat(10, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={5} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Room
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={roomRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-            <HStack>
-              <Text as="span" fontSize="sm" color="gray.600">
-                Amenities
-              </Text>
-              <Box display="flex" ml={2}>
-                <StarRating rating={amenitiesRating} />
-              </Box>
-            </HStack>
+          <Grid templateColumns='repeat(10, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={5} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                  Amenities
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={amenitiesRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-            <HStack>
-              <Text as="span" fontSize="sm" color="gray.600">
-                Bathroom
-              </Text>
-              <Box display="flex" ml={2}>
-                <StarRating rating={bathroomRating} />
-              </Box>
-            </HStack>
+          <Grid templateColumns='repeat(10, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={5} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Bathroom
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={bathroomRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-            <HStack>
-              <Text as="span" fontSize="sm" color="gray.600">
-                Building
-              </Text>
-              <Box display="flex" ml={2}>
-                <StarRating rating={buildingRating} />
-              </Box>
-            </HStack>
+          <Grid templateColumns='repeat(10, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={5} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Building
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={buildingRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-            <HStack>
-              <Text as="span" fontSize="sm" color="gray.600">
-                Cleanliness
-              </Text>
-              <Box display="flex" ml={2}>
-                <StarRating rating={cleanlinessRating} />
-              </Box>
-            </HStack>
-          </VStack>
+          <Grid templateColumns='repeat(10, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={5} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Cleanliness
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={cleanlinessRating ?? 0} />
+                </GridItem>
+          </Grid>
+
           <Box
             flex="1"
             display="flex"
@@ -193,7 +204,7 @@ const DormReviewCard = ({
             justifyContent="center"
           >
             <Center pt={4} px={2}>
-              <Image src={photo} alt={`${dormName} room`} boxSize="12em" />{" "}
+              <Image src={photo} alt={`${dormName} room`} boxSize="12em" borderRadius={10} />{" "}
             </Center>
           </Box>
         </Box>
@@ -205,7 +216,7 @@ const DormReviewCard = ({
           <ModalHeader>{dormName} Information</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Image src={photo} alt={`${dormName} room`} boxSize="full" mb={2} />
+            <Image src={photo} alt={`${dormName} room`} boxSize="full" mb={2} borderRadius={10} />
             <Flex alignItems="center" justifyContent="space-between" mb={2}>
               <Badge
                 borderRadius="full"
@@ -219,56 +230,64 @@ const DormReviewCard = ({
                 {roomNumber} {roomType}
               </Badge>
             </Flex>
-            <Text color="gray.600" fontSize="md" noOfLines={[1, 2, 3]}>
+            <Text color="black" fontWeight={600} fontSize="md" noOfLines={[1, 2, 3]} mt={5} mb={5}>
               {review}
             </Text>
             {/* Ratings */}
-            <VStack align="start" mt={4} spacing={4}>
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Room
-                </Text>
-                <Box display="flex" ml={2}>
-                  <StarRating rating={roomRating} />
-                </Box>
-              </HStack>
+            <Grid templateColumns='repeat(4, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={1} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Room
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={roomRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
+          <Grid templateColumns='repeat(4, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={1} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
                   Amenities
-                </Text>
-                <Box display="flex" ml={2}>
-                  <StarRating rating={amenitiesRating} />
-                </Box>
-              </HStack>
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={amenitiesRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Bathroom
-                </Text>
-                <Box display="flex" ml={2}>
-                  <StarRating rating={bathroomRating} />
-                </Box>
-              </HStack>
+          <Grid templateColumns='repeat(4, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={1} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Bathroom
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={bathroomRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Building
-                </Text>
-                <Box display="flex" ml={2}>
-                  <StarRating rating={buildingRating} />
-                </Box>
-              </HStack>
+          <Grid templateColumns='repeat(4, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={1} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Building
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={buildingRating ?? 0} />
+                </GridItem>
+          </Grid>
 
-              <HStack>
-                <Text as="span" fontSize="sm" color="gray.600">
-                  Cleanliness
-                </Text>
-                <Box display="flex" ml={2}>
-                  <StarRating rating={cleanlinessRating} />
-                </Box>
-              </HStack>
-            </VStack>
+          <Grid templateColumns='repeat(4, 1fr)' mb={2} mt={2}>
+                <GridItem colSpan={1} display="flex" alignItems="center">
+                  <Text as="span" fontSize="sm" color="gray.600">
+                    Cleanliness
+                  </Text>
+                </GridItem>
+                <GridItem display="flex" alignItems="center">
+                  <StarRating rating={cleanlinessRating ?? 0} />
+                </GridItem>
+          </Grid>
           </ModalBody>
           <ModalFooter>
             <Textarea
