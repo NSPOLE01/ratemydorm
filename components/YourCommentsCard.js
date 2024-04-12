@@ -144,8 +144,8 @@ const YourCommentsCard = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent marginY="auto" maxW="32rem" mx="auto">
-          <ModalHeader>Delete Review</ModalHeader>
-          <ModalBody>Are you sure you want to delete this review?</ModalBody>
+          <ModalHeader>Delete Comment</ModalHeader>
+          <ModalBody>Are you sure you want to delete this comment?</ModalBody>
           <ModalFooter>
             <Button colorScheme="red" mr={3} onClick={handleDelete}>
               Yes, Delete
