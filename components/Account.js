@@ -121,7 +121,7 @@ const Account = () => {
             </Box>
           )}
 
-          <Heading as="h3" size="lg" mb={4}>
+          <Heading as="h3" size="lg" mb={4} mt={20}>
             Your Comments
           </Heading>
 
