@@ -12,6 +12,7 @@ import {
   Heading,
   Input,
   Textarea,
+  useToast,
   Text,
   Icon,
   Select,
@@ -65,6 +66,7 @@ function isValidRoomNumber(roomNumber) {
 const WriteReview = () => {
   const router = useRouter();
   const [dormId, setDormId] = useState("");
+  const toast = useToast();
 
   const [dormName, setDormName] = useState("");
   const [review, setReview] = useState("");
@@ -158,9 +160,23 @@ const WriteReview = () => {
         cleanlinessRating,
         amenitiesRating
       );
+      toast({
+        title: "Review added.",
+        description:
+          "The review has been successfully added and statistics updated.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       router.push(`/reviewPage?dormId=${dormId}`);
     } catch (e) {
-      console.error("Error adding document: ", e);
+      toast({
+        title: "Error",
+        description: "Could not add the review. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

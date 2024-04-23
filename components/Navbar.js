@@ -51,7 +51,7 @@ export default function Navbar() {
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
         minH={"60px"}
-        py={{ base: 2 }}
+        py={{ base: 3 }}
         px={{ base: 4 }}
         borderBottom={1}
         borderStyle={"solid"}
@@ -66,8 +66,12 @@ export default function Navbar() {
               fontFamily={"heading"}
               color={"brand.100"}
               cursor="pointer"
+              fontWeight={700}
             >
-              RATEMYDORM
+              <Text as={"span"} color={"brand.200"}>
+              VANDY
+              </Text>
+              DORM
             </Text>
           </NextLink>
         </Flex>

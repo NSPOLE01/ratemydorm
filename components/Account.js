@@ -1,7 +1,15 @@
 import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { app, db } from "@/firebaseConfig";
-import { Box, Image, Heading, Text, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Heading,
+  Text,
+  SimpleGrid,
+  IconButton,
+  useToast,
+} from "@chakra-ui/react";
 import YourReviewsCard from "./YourReviewsCard";
 import { collectionGroup, query, where, getDocs } from "firebase/firestore";
 import YourCommentsCard from "./YourCommentsCard";
@@ -35,6 +43,7 @@ const Account = () => {
           commentsArray.push({ id: doc.id, ...doc.data() });
         });
         setComments(commentsArray);
+        console.log(commentsArray);
         setReviews(reviewsArray);
       }
     };
@@ -58,6 +67,12 @@ const Account = () => {
     setReviews(updatedReviews);
   };
 
+  const handleDeleteComment = (commentId) => {
+    const updatedComments = comments.filter(
+      (comment) => comment.id !== commentId
+    );
+    setComments(updatedComments);
+  };
 
   return (
     <div>
@@ -106,24 +121,31 @@ const Account = () => {
             </Box>
           )}
 
-          <Heading as="h3" size="lg" mb={4}>
+          <Heading as="h3" size="lg" mb={4} mt={20}>
             Your Comments
           </Heading>
 
           {comments.length > 0 ? (
-            comments.map((comment) => (
-              <YourCommentsCard
-                key={comment.id}
-                commentText={comment.text}
-                timestamp={comment.createdAt}
-                dormName={comment.dormName}
-                roomNumber={comment.roomNumber}
-              />
-            ))
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} mb={6}>
+              {comments.map((comment) => (
+                <YourCommentsCard
+                  key={comment.id}
+                  reviewId={comment.reviewId}
+                  commentId={comment.id}
+                  commentText={comment.text}
+                  timestamp={comment.createdAt}
+                  dormName={comment.dormName}
+                  roomNumber={comment.roomNumber}
+                  handleDeleteComment={() => handleDeleteComment(comment.id)}
+                />
+              ))}
+            </SimpleGrid>
           ) : (
-            <Text fontSize="xl" color="gray.600" textAlign="center">
-              You have no comments.
-            </Text>
+            <Box width="full" p={5} textAlign="center">
+              <Text fontSize="xl" color="gray.600">
+                You have no comments.
+              </Text>
+            </Box>
           )}
         </Box>
       )}

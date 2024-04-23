@@ -1,7 +1,42 @@
 import React from "react";
-import { Box, Badge, Text, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Badge,
+  Text,
+  Stack,
+  IconButton,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  Button,
+  useDisclosure,
+  Spacer,
+  Flex,
+} from "@chakra-ui/react";
+import { doc, deleteDoc, getDoc } from "firebase/firestore";
+import {
+  auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  db,
+} from "@/firebaseConfig";
+import { FiTrash2 } from "react-icons/fi";
 
-const YourCommentsCard = ({ commentText, timestamp, dormName, roomNumber }) => {
+const YourCommentsCard = ({
+  commentId,
+  reviewId,
+  commentText,
+  timestamp,
+  dormName,
+  roomNumber,
+  handleDeleteComment,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const formatDate = (timestamp) => {
     const date = timestamp.toDate();
     return date.toLocaleDateString("en-US", {
@@ -13,8 +48,78 @@ const YourCommentsCard = ({ commentText, timestamp, dormName, roomNumber }) => {
     });
   };
 
+  const dormNameMap = {
+    "Chaffin Place": "chaffin-place",
+    "Cole Hall": "cole-hall",
+    Crawford: "crawford",
+    "E. Bronson Ingram": "e.-bronson-ingram",
+    East: "east",
+    Gillette: "gillette",
+    "Hank Ingram": "hank-ingram",
+    "Lewis House": "lewis-house",
+    "Lupton House": "lupton-house",
+    "McTyeire Hall": "mctyeire-hall",
+    Memorial: "memorial",
+    Moore: "moore",
+    "Morgan House": "morgan-house",
+    Murray: "murray",
+    "Nicholas S. Zeppos": "nicholas-s.-zeppos",
+    North: "north",
+    Rothschild: "rothschild",
+    "Scales House": "scales-house",
+    Stambaugh: "stambaugh",
+    "Stapelton House": "stapelton-house",
+    Sutherland: "sutherland",
+    "Tolman Hall": "tolman-hall",
+    "Vaughn House": "vaughn-house",
+    Warren: "warren",
+    West: "west",
+  };
+
+  const handleDelete = async () => {
+    onClose();
+    const dormDocument = dormNameMap[dormName];
+    try {
+      await deleteDoc(
+        doc(
+          db,
+          "dorms",
+          dormDocument,
+          "reviews",
+          reviewId,
+          "comments",
+          commentId
+        )
+      );
+      handleDeleteComment(commentId);
+      toast({
+        title: "Comment deleted.",
+        description:
+          "The comment has been successfully deleted and statistics updated.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Could not delete the comment. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p={4} maxW="sm">
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      p={4}
+      maxW="sm"
+      position="relative"
+    >
       <Stack spacing={3}>
         <Text fontSize="sm" color="gray.600">
           {formatDate(timestamp)}
@@ -24,6 +129,33 @@ const YourCommentsCard = ({ commentText, timestamp, dormName, roomNumber }) => {
           {dormName} {roomNumber}
         </Badge>
       </Stack>
+
+      <Flex alignItems="center">
+        <Spacer />
+        <IconButton
+          aria-label="Delete review"
+          icon={<FiTrash2 />}
+          colorScheme="red"
+          variant="ghost"
+          onClick={onOpen}
+          _hover={{ color: "red.500" }}
+        />
+      </Flex>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent marginY="auto" maxW="32rem" mx="auto">
+          <ModalHeader>Delete Comment</ModalHeader>
+          <ModalBody>Are you sure you want to delete this comment?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={handleDelete}>
+              Yes, Delete
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
