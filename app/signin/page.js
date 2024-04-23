@@ -23,7 +23,7 @@ const SignInPage = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       const user = result.user;
-      if (user.email && user.email.endsWith("@vanderbilt.edu")) {
+      if (user.email) {
         console.log("Authenticated successfully");
         localStorage.setItem("userEmail", user.email);
       } else {
